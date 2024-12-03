@@ -275,7 +275,7 @@ body {
     .digital-clock {
         font-size: 20px;
         padding: 0 2px;
-        top: 70px;
+        top: 65px;
         left: 130px;
         font-family: 'Arial', sans-serif;
     }
@@ -292,7 +292,7 @@ body {
     .date {
         font-size: 11px;
         /* font-weight: bold; */
-        top: 92px;
+        top: 95px;
         left: 130px;
         font-family: sans-serif;
     }
