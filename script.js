@@ -85,6 +85,45 @@ function showPrayerTimeMessage(hours, minutes, seconds) {
     }
 }
 
+let audioStarted = false; // Flag untuk memastikan audio hanya dimainkan sekali
+// Audio doa
+function playAudioAtSpecificTime() {
+    const currentTime = new Date();
+    const targetHour = 3;
+    const targetMinute = 1;
+    
+    // Mengecek apakah sekarang tepat pukul 3:01 dan audio belum diputar
+    if (currentTime.getHours() === targetHour && currentTime.getMinutes() === targetMinute && !audioStarted) {
+        const audio = document.getElementById('azanAudio');
+        audio.src = "doa.mp3";  
+        audio.currentTime = 0; // Mulai dari awal
+
+        // Tentukan waktu pemutaran selama 5 menit
+        const playEndTime = Date.now() + (5 * 60 * 1000); // 5 menit = 5 * 60 * 1000 ms
+        
+        // Fungsi untuk memutar audio dalam loop selama 5 menit
+        function playAudioLoop() {
+            if (Date.now() >= playEndTime) {
+                audio.pause();  // Hentikan audio setelah 5 menit
+                audioStarted = false; // Reset flag setelah selesai
+                return;
+            }
+
+            audio.play();  // Putar audio
+            audio.onended = function() {
+                audio.currentTime = 0;  // Mulai dari awal
+                playAudioLoop();  // Panggil lagi untuk memutar audio berulang
+            };
+        }
+
+        // Mulai loop audio
+        playAudioLoop();
+        audioStarted = true; // Tandai audio sudah diputar
+    }
+}
+
+
+
 // Fungsi untuk memperbarui jam dan menampilkan waktu azan
 function updateClock() {
     const now = new Date();
@@ -123,6 +162,9 @@ function updateClock() {
     if (hourHand) hourHand.style.transform = `rotate(${hourDeg}deg)`;
     if (minuteHand) minuteHand.style.transform = `rotate(${minuteDeg}deg)`;
     if (secondHand) secondHand.style.transform = `rotate(${secondDeg}deg)`;
+
+    // Cek dan putar audio pada waktu yang ditentukan (3:01)
+    playAudioAtSpecificTime();
 
     // Refresh halaman setiap 10 menit (600000 ms)
     setInterval(function() {
